@@ -18,3 +18,18 @@
   width: 100%;
   text-align: center;
 }
+
+.nav {
+  border-radius: 0 !important;
+}
+
+.action-content {
+  display: flex;
+  width: 100%;
+  justify-content: space-around;
+  padding: 0 15%;
+}
+
+.actions-btn {
+  width: 25%;
+}

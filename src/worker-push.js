@@ -7,7 +7,7 @@ export default function() {
       email: "jane.doe@gmail.com",
       id: 1
     };
-    for (let i = 0; i < 10000000; i++) {
+    for (let i = 0; i < 30000000; i++) {
       userDetails.id = i++;
       userDetails.dateJoined = Date.now();
       users.push(userDetails);

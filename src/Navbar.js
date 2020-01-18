@@ -4,7 +4,7 @@ import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <Segment inverted>
+    <Segment inverted className="nav">
       <Menu inverted pointing secondary className="menu">
         <Menu.Item as={NavLink} exact to="/" name="home" />
         <Menu.Item as={NavLink} to="/messages" name="messages" />
