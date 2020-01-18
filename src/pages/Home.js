@@ -1,47 +1,52 @@
-import React, { useState, useEffect, Fragment } from "react";
-
+import React, { useState, useEffect } from "react";
 import workerCalculate from "../worker-calculate";
 import workerPush from "../worker-push";
 import WebWorker from "../worker-setup";
 import ActionsContent from "./components/ActionsContent";
 import SegmentContent from "./components/SegmentContent";
+import { Transition } from "semantic-ui-react";
+
+const webWorkerCalculate = new WebWorker(workerCalculate);
+const webWorkerPush = new WebWorker(workerPush);
 
 const HomePage = () => {
   const [visible, setVisible] = useState(true);
   const [calculateLoading, setCalculateLoafing] = useState(false);
-  const [webWorkerCalculate, setWebWorkerCalculate] = useState(null);
-  const [webWorkerPush, setWebWorkerPush] = useState(null);
+  const [pushLoading, setPushLoading] = useState(false);
   const [sum, setSum] = useState(null);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    setWebWorkerCalculate(new WebWorker(workerCalculate));
-    setWebWorkerPush(new WebWorker(workerPush));
+    const calculateListener = event => {
+      setSum(event.data);
+      setCalculateLoafing(false);
+    };
+    const pushListener = event => {
+      setUsers(event.data);
+      setPushLoading(false);
+    };
+    webWorkerCalculate.addEventListener("message", calculateListener);
+    webWorkerPush.addEventListener("message", pushListener);
+    return () => {
+      webWorkerCalculate.removeEventListener("message", calculateListener);
+      webWorkerPush.removeEventListener("message", pushListener);
+    };
   }, []);
 
   const calculate = () => {
     setCalculateLoafing(true);
     webWorkerCalculate.postMessage(10000000);
-    webWorkerCalculate.addEventListener("message", event => {
-      setSum(event.data);
-      setWebWorkerCalculate(null);
-      setWebWorkerCalculate(new WebWorker(workerCalculate));
-      setCalculateLoafing(false);
-    });
   };
 
   const push = () => {
+    setPushLoading(true);
     webWorkerPush.postMessage("push");
-    webWorkerPush.addEventListener("message", event => {
-      setUsers(event.data);
-      setWebWorkerPush(null);
-      setWebWorkerPush(new WebWorker(workerPush));
-    });
   };
 
   const handleAnimate = () => {
     setVisible(!visible);
   };
+
   const slice = users.slice(0, 100);
   return (
     <div>
@@ -49,17 +54,20 @@ const HomePage = () => {
         push={push}
         calculate={calculate}
         calculateLoading={calculateLoading}
+        pushLoading={pushLoading}
       />
       <SegmentContent visible={visible} handleAnimate={handleAnimate} />
       {sum && <div className="sum-result">{sum}</div>}
-      <Fragment>
-        {slice.map((item, key) => (
-          <div key={key}>
-            <div>{item.name}</div>
-            <div>{item.email}</div>
-          </div>
-        ))}
-      </Fragment>
+      <Transition visible={!pushLoading} animation="slide up" duration={500}>
+        <div>
+          {slice.map((item, key) => (
+            <div key={key}>
+              <div>{item.name}</div>
+              <div>{item.email}</div>
+            </div>
+          ))}
+        </div>
+      </Transition>
     </div>
   );
 };

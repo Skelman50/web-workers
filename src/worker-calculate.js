@@ -7,4 +7,11 @@ export default function() {
     }
     postMessage(sum);
   });
+  this.addEventListener(
+    "exit",
+    () => {
+      process.exit(0);
+    },
+    false
+  );
 }

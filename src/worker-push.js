@@ -12,7 +12,14 @@ export default function() {
       userDetails.dateJoined = Date.now();
       users.push(userDetails);
     }
-
     postMessage(users);
   });
+
+  this.addEventListener(
+    "exit",
+    () => {
+      process.exit(0);
+    },
+    false
+  );
 }
