@@ -1,21 +1,22 @@
-import React, { useState, useEffect } from "react";
-import workerCalculate from "../worker-calculate";
-import workerPush from "../worker-push";
-import WebWorker from "../worker-setup";
-import ActionsContent from "./components/ActionsContent";
-import SegmentContent from "./components/SegmentContent";
+import React, { useState, useEffect, Fragment } from "react";
+import workerCalculate from "../../../utils/workers/worker-calculate";
+import workerPush from "../../../utils/workers/worker-push";
+import ActionsContent from "../components/ActionsContent";
+import SegmentContent from "../components/SegmentContent";
 import { Transition } from "semantic-ui-react";
+import WebWorker from "../../../utils/workers/worker-setup";
 
 const webWorkerCalculate = new WebWorker(workerCalculate);
 const webWorkerPush = new WebWorker(workerPush);
 
-const HomePage = () => {
+const Pics = () => {
   const [visible, setVisible] = useState(true);
   const [calculateLoading, setCalculateLoafing] = useState(false);
   const [pushLoading, setPushLoading] = useState(false);
   const [sum, setSum] = useState(null);
   const [users, setUsers] = useState([]);
 
+  const slice = users.slice(0, 100);
   useEffect(() => {
     const calculateListener = event => {
       setSum(event.data);
@@ -46,10 +47,8 @@ const HomePage = () => {
   const handleAnimate = () => {
     setVisible(!visible);
   };
-
-  const slice = users.slice(0, 100);
   return (
-    <div>
+    <Fragment>
       <ActionsContent
         push={push}
         calculate={calculate}
@@ -68,8 +67,8 @@ const HomePage = () => {
           ))}
         </div>
       </Transition>
-    </div>
+    </Fragment>
   );
 };
 
-export default HomePage;
+export default Pics;
