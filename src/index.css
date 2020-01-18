@@ -1,0 +1,20 @@
+.ololo {
+  color: black !important;
+}
+
+.menu {
+  border: none !important;
+}
+
+.segment-home {
+  align-items: center !important;
+}
+
+.home-image {
+  margin-bottom: 15px;
+}
+
+.sum-result {
+  width: 100%;
+  text-align: center;
+}
